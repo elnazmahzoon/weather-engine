@@ -5,6 +5,8 @@ import WeatherDate from "./WeatherDate";
 import "./App.css"
 export default function Main() {
     const [city, setCity] = useState("");
+    const [temp, setTemp] = useState("");
+    const [metric, setMetric] = useState("celsius");
     const [weather, setWeather] = useState({});
     const [loaded, setLoaded] = useState(false);
 
@@ -22,6 +24,7 @@ export default function Main() {
     function displayWeather(response) {
         setLoaded(true);
         setWeather({
+            name: response.data.name,
             temperature: response.data.main.temp,
             wind: response.data.wind.speed,
             humidity: response.data.main.humidity,
@@ -30,6 +33,19 @@ export default function Main() {
             description: response.data.weather[0].description,
             date: response.data.dt,
         });
+        setTemp(response.data.main.temp);
+    }
+
+    function handleShowFahrenheit(event){
+        event.preventDefault();
+        setMetric("fahrenheit");
+        setTemp((weather.temperature * 9/5) + 32);
+    }
+
+    function handleShowCelsius(event){
+        event.preventDefault();
+        setMetric("celsius");
+        setTemp(weather.temperature);
     }
     if (loaded) {
         return (
@@ -43,7 +59,7 @@ export default function Main() {
                 <main>
                     <div className="details row ">
                         <div className="col-6 align-left">
-                            <h1 id="city">{city}</h1>
+                            <h1 id="city">{weather.name}</h1>
                             <p className="city-weather-details">
                                 <WeatherDate data={weather.date} />
                                 {"  "}
@@ -64,8 +80,9 @@ export default function Main() {
                         <div className="temp-details col-6 temperature-container d-flex justify-content-end mt-5">
                             <div id="icon">             <img src={weather.icon} alt={weather.description} />
                             </div>
-                            <span id="temp">{Math.round(weather.temperature)}</span>
-                            <span id="unit">°C</span>
+                            <span id="temp">{Math.round(temp)}</span>
+                            <span id="unit">
+                                <a href="/" className={(metric === "celsius") ? "active" : "not-active"} onClick={handleShowCelsius}>°C</a> | <a href="/" className={(metric === "fahrenheit") ? "active" : "not-active"} onClick={handleShowFahrenheit}>°F</a></span>
                         </div>
                     </div>
                     <div className="weather-forecast" id="forecast"></div>
