@@ -1,3 +1,5 @@
+import 'bootstrap/dist/css/bootstrap.css';
+
 import Main from "./Main";
 import Footer from "./Footer";
 
@@ -6,8 +8,10 @@ import './App.css';
 function App() {
   return (
     <div className="App">
-      <Main />
-      <Footer />
+      <div className='container'>
+        <Main />
+        <Footer />
+      </div>
     </div>
   );
 }
