@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
+import WeatherDate from "./WeatherDate";
 import "./App.css"
 export default function Main() {
     const [city, setCity] = useState("");
@@ -26,7 +27,8 @@ export default function Main() {
             humidity: response.data.main.humidity,
             icon: `http://openweathermap.org/img/wn/${response.data.weather[0].icon
                 }@2x.png`,
-            description: response.data.weather[0].description
+            description: response.data.weather[0].description,
+            date: response.data.dt,
         });
     }
     if (loaded) {
@@ -39,12 +41,11 @@ export default function Main() {
                     </form>
                 </header>
                 <main>
-                    <div className="details">
-                        <div>
+                    <div className="details row ">
+                        <div className="col-6 align-left">
                             <h1 id="city">{city}</h1>
                             <p className="city-weather-details">
-                                {/* <span id="day">Tuesday </span>
-                            <span id="time">18:00</span> */}
+                                <WeatherDate data={weather.date} />
                                 {"  "}
                                 <span id="status">{weather.description}</span>
                                 <br />
@@ -52,7 +53,7 @@ export default function Main() {
                                 <strong>
                                     <span id="humidity">{weather.humidity}%</span>
                                 </strong>
-                                {"  "}
+                                {", "}
                                 Wind:
                                 <strong>
                                     <span id="wind">{weather.wind}km/h</span>
@@ -60,7 +61,7 @@ export default function Main() {
                             </p>
                         </div>
 
-                        <div className="temp-details">
+                        <div className="temp-details col-6 temperature-container d-flex justify-content-end mt-5">
                             <div id="icon">             <img src={weather.icon} alt={weather.description} />
                             </div>
                             <span id="temp">{Math.round(weather.temperature)}</span>
@@ -73,12 +74,12 @@ export default function Main() {
         );
     } else {
         return (
-        <header>
-            <form id="search-form">
-                <input type="text" placeholder="Enter a city.." id="form-input" onChange={updateCity} />
-                <input type="submit" value="Submit" id="form-submit" onClick={handleSubmit} />
-            </form>
-        </header>
+            <header>
+                <form id="search-form">
+                    <input type="text" placeholder="Enter a city.." id="form-input" onChange={updateCity} />
+                    <input type="submit" value="Submit" id="form-submit" onClick={handleSubmit} />
+                </form>
+            </header>
         );
     }
 }

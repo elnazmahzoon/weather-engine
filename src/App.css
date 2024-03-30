@@ -8,6 +8,7 @@
   padding: 30px;
   box-shadow: 0 30px 50px rgba(65, 50, 100, 0.08);
 }
+
 body {
   background-color: #f9f7fe;
   font-family: "Roboto", sans-serif;
@@ -51,9 +52,15 @@ main {
 }
 
 h1 {
-  margin: 0;
+  color: #272142;
   font-size: 38px;
-  line-height: 48px;
+  font-weight: 700;
+  line-height: 29px;
+  margin: 20px 0 10px;
+}
+
+.align-left {
+  text-align: left !important;
 }
 
 .city-weather-details {
