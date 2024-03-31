@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 
 import WeatherDate from "./WeatherDate";
+
 import "./App.css"
+
 export default function Main() {
     const [city, setCity] = useState("");
     const [temp, setTemp] = useState("");
@@ -16,33 +18,33 @@ export default function Main() {
 
     function handleSubmit(event) {
         event.preventDefault();
-        let apiKey = "094780c710fa4efd669f0df8c3991927";
-        let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+        let apiKey = "d2fa3o5d84e8f709eat4a9eb65972bf2";
+        let apiUrl = `https://api.shecodes.io/weather/v1/forecast?query=${city}&key=${apiKey}`;
         axios.get(apiUrl).then(displayWeather);
     }
 
     function displayWeather(response) {
         setLoaded(true);
         setWeather({
-            name: response.data.name,
-            temperature: response.data.main.temp,
-            wind: response.data.wind.speed,
-            humidity: response.data.main.humidity,
-            icon: `http://openweathermap.org/img/wn/${response.data.weather[0].icon
-                }@2x.png`,
-            description: response.data.weather[0].description,
-            date: response.data.dt,
+            name: response.data.city,
+            temperature: response.data.daily[0].temperature.day,
+            wind: response.data.daily[0].wind.speed,
+            humidity: response.data.daily[0].temperature.humidity,
+            icon: response.data.daily[0].condition.icon_url,
+            description: response.data.daily[0].condition.description,
+            date: response.data.daily[0].time,
+            forecast: response.data.daily,
         });
-        setTemp(response.data.main.temp);
+        setTemp(response.data.daily[0].temperature.day);
     }
 
-    function handleShowFahrenheit(event){
+    function handleShowFahrenheit(event) {
         event.preventDefault();
         setMetric("fahrenheit");
-        setTemp((weather.temperature * 9/5) + 32);
+        setTemp((weather.temperature * 9 / 5) + 32);
     }
 
-    function handleShowCelsius(event){
+    function handleShowCelsius(event) {
         event.preventDefault();
         setMetric("celsius");
         setTemp(weather.temperature);
@@ -85,7 +87,35 @@ export default function Main() {
                                 <a href="/" className={(metric === "celsius") ? "active" : "not-active"} onClick={handleShowCelsius}>°C</a> | <a href="/" className={(metric === "fahrenheit") ? "active" : "not-active"} onClick={handleShowFahrenheit}>°F</a></span>
                         </div>
                     </div>
-                    <div className="weather-forecast" id="forecast"></div>
+                    <div className="weather-forecast" id="forecast">
+                        {
+                            weather.forecast.map(function (day, index) {
+                                if (index > 0 && index < 6) {
+                                    let date = new Date(day.time * 1000);
+                                    let days = [
+                                        'Sunday',
+                                        'Monday',
+                                        'Tuesday',
+                                        'Wednesday',
+                                        'Thursday',
+                                        'Friday',
+                                        'Saturday',
+                                    ];
+                                    let dayName = days[date.getDay()];
+                                    return (
+                                        <div key={index}>
+                                            <div>{dayName}</div>
+                                            <img src={day.condition.icon_url} alt="" />
+                                            <div className="weather-forecast-temperatures">
+                                                <span className="weather-forecast-temperature">{Math.round(day.temperature.maximum)}°</span>
+                                                <span className="weather-forecast-temperature">{Math.round(day.temperature.minimum)}°</span>
+                                            </div>
+                                        </div>
+                                    );
+                                }
+                            })
+                        }
+                    </div>
                 </main>
             </div>
         );
