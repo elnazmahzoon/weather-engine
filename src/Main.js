@@ -112,7 +112,7 @@ export default function Main() {
                                             </div>
                                         </div>
                                     );
-                                }
+                                } else { return null; }
                             })
                         }
                     </div>
